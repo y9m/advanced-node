@@ -1,8 +1,20 @@
 const puppeteer = require('puppeteer');
 
-test('Can launch a new broweser', async () => {
-  const browser = await puppeteer.launch({
+let browser, page;
+
+beforeEach(async () => {
+  browser = await puppeteer.launch({
     headless: false
   });
-  const page = await browser.newPage();
+  page = await browser.newPage();
+  await page.goto('localhost:3000');
+});
+
+afterEach(async () => {
+  await browser.close();
+});
+
+test('The header has the correct text', async () => {
+  const text = await page.$eval('a.brand-logo', el => el.innerHTML);
+  expect(text).toEqual('Blogster');
 });
