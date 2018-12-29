@@ -18,7 +18,7 @@ describe('When logged in', () => {
     await page.click('a.btn-floating');
   });
 
-  test('Can see blog creation form', async () => {
+  test('User can see blog creation form', async () => {
     const label = await page.getContentsOf('form label');
 
     expect(label).toEqual('Blog Title');
@@ -61,5 +61,23 @@ describe('When logged in', () => {
       expect(titleError).toEqual('You must provide a value');
       expect(contentError).toEqual('You must provide a value');
     });
+  });
+});
+
+describe('When not logged in', () => {
+  test('User cannot create blog posts', async () => {
+    const result = await page.evaluate(async () => {
+      const res = await fetch('/api/blogs', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title: 'My Title', content: 'My Content' })
+      });
+      return res.json();
+    });
+
+    expect(result).toEqual({ error: 'You must log in!' });
   });
 });
