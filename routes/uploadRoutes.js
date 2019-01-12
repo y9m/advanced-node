@@ -7,7 +7,7 @@ const s3 = new AWS.S3({
   accessKeyId: keys.accessKeyId,
   secretAccessKey: keys.secretAccessKey
 });
-
+/*eslint-disable*/
 module.exports = app => {
   app.get('/api/upload', requireLogin, (req, res) => {
     const key = `${req.user.id}/${uuid()}.jpeg`;
@@ -16,7 +16,7 @@ module.exports = app => {
       'putObject',
       {
         Bucket: 'test-blog-bucket-y9m',
-        ContentType: 'jpeg',
+        ContentType: 'image/jpeg',
         Key: key
       },
       (err, url) => {
